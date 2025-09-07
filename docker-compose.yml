@@ -29,7 +29,7 @@ services:
       db:
         condition: service_healthy
     command: >
-      sh -lc "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+      bash -lc "python -m alembic -c /app/alembic.ini upgrade head && python -m uvicorn app.main:app --host 0.0.0.0 --port 8000"
     ports:
       - "8000:8000"
     healthcheck:
