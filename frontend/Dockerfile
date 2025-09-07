@@ -5,9 +5,12 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-FROM node:20-alpine
-WORKDIR /app
-COPY --from=build /app/dist ./dist
-RUN npm install -g vite@5.2.8
-ENV VITE_PORT=5173
-CMD ["sh", "-c", "vite preview --host 0.0.0.0 --port ${VITE_PORT}"]
+FROM nginx:1.27-alpine
+# Minimal SPA nginx config
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Serve built assets
+COPY --from=build /app/dist /usr/share/nginx/html
+# Healthcheck
+HEALTHCHECK --interval=15s --timeout=3s --retries=5 CMD wget -qO- http://localhost/ || exit 1
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

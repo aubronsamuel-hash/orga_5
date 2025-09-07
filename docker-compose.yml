@@ -46,34 +46,17 @@ services:
       retries: 10
       start_period: 10s
   web:
-    build: ./frontend
-    environment:
-      VITE_PORT: ${VITE_PORT}
-    depends_on:
-      api:
-        condition: service_healthy
+    build:
+      context: ./frontend
+    image: orga_5-web
     ports:
-      - "${VITE_PORT}:5173"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:${VITE_PORT}"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-  proxy:
-    image: caddy:2-alpine
-    volumes:
-      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - "8080:80"
     depends_on:
-      api:
-        condition: service_healthy
-      web:
-        condition: service_healthy
-    ports:
-      - "${WEB_PORT}:8080"
+      - api
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
-      interval: 5s
-      timeout: 5s
+      test: ["CMD", "wget", "-qO-", "http://localhost/"]
+      interval: 15s
+      timeout: 3s
       retries: 5
 
 volumes:
