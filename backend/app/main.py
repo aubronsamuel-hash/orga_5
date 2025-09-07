@@ -1,21 +1,39 @@
-from fastapi import FastAPI, Depends
+from fastapi import Depends, FastAPI, HTTPException
+from sqlalchemy import select, text
 from sqlalchemy.orm import Session
-from . import models, crud
-from .schemas import UserOut
-from .deps import db_dep
+from pydantic import BaseModel
+
+from .core.security import create_access_token, verify_password
+from .db import engine, get_session
+from .models import User
 
 app = FastAPI(title="Orga5 API")
 
-@app.on_event("startup")
-def seed():
-    from .db import SessionLocal
-    with SessionLocal() as db:
-        crud.seed_minimal(db)
+
+class LoginIn(BaseModel):
+    email: str
+    password: str
+
 
 @app.get("/health")
-def health():
-    return {"status": "ok"}
+def health() -> dict:
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+    except Exception as exc:  # pragma: no cover - passthrough
+        raise HTTPException(status_code=500, detail="db_down") from exc
+    return {"status": "ok", "db": "up"}
 
-@app.get("/users", response_model=list[UserOut])
-def list_users(db: Session = Depends(db_dep)):
-    return db.query(models.User).all()
+
+@app.post("/auth/login")
+def login(data: LoginIn, db: Session = Depends(get_session)) -> dict:
+    email = data.email.lower()
+    user = db.scalar(select(User).where(User.email == email))
+    if not user or not verify_password(data.password, user.password_hash):
+        raise HTTPException(status_code=401, detail="invalid_credentials")
+    token = create_access_token({"sub": user.id, "email": user.email})
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "user": {"id": user.id, "email": user.email},
+    }

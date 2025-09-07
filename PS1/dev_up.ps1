@@ -16,16 +16,5 @@ if ($Rebuild) { $composeCmd = "docker compose up -d --build" }
 
 wsl -d Ubuntu -- bash -lc "cd /mnt/c/Users/samue/orga_5 && $composeCmd"
 
-# Wait for API health
-Write-Host "Waiting for API health at http://localhost:8000/health ..."
-$max = 40
-for ($i=0; $i -lt $max; $i++) {
-  try {
-    $r = Invoke-WebRequest -Uri "http://localhost:8000/health" -UseBasicParsing -TimeoutSec 3
-    if ($r.StatusCode -eq 200) { Write-Host "API is healthy."; break }
-  } catch {}
-  Start-Sleep -Seconds 2
-}
-
-Write-Host "Open front-end: http://localhost:8080"
-Start-Process "http://localhost:8080"
+& "$PSScriptRoot/seed.ps1"
+& "$PSScriptRoot/smoke.ps1"
