@@ -69,7 +69,9 @@ jobs:
 
       - name: Unit tests
         working-directory: frontend
-        run: npm test --if-present -- --ci
+        env:
+          CI: "true"
+        run: npm test --if-present
 
       - name: Playwright
         working-directory: frontend
