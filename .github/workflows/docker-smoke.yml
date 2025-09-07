@@ -1,0 +1,24 @@
+name: docker-smoke
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker compose up -d --build
+      - name: Wait for proxy
+        run: |
+          for i in {1..30}; do
+            if curl -f http://localhost:8080/api/health; then exit 0; fi
+            sleep 2
+          done
+          exit 1
+      - run: curl -f http://localhost:8080/
+      - run: curl -f http://localhost:8080/api/health
+      - run: curl -f http://localhost:8080/api/ping/db
+      - run: curl -f http://localhost:8080/api/ping/redis
+      - run: docker compose down -v

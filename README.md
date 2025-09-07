@@ -1,12 +1,18 @@
 # Orga 5
 
-## Endpoints
-- `GET /v1/planning/events?from=ISO8601&to=ISO8601&project_id` : liste des evenements en UTC.
-- `GET /v1/planning/events/{event_id}` : evenement avec assignments.
+## Prerequis
+- Docker Desktop
+- PowerShell 7
 
-## Voir la vue planning
+## Demarrage local
 ```
-PS1\dev_up.ps1
-PS1\dev_seed_planning.ps1
-# puis ouvrir http://localhost:5173/planning
+copy .env.example .env
+pwsh PS1/dev_up.ps1
+pwsh PS1/smoke.ps1
 ```
+
+## Endpoints attendus
+- `/` : frontend React
+- `/api/health` : `{ "api": "ok" }`
+- `/api/ping/db` : `{ "db": 1 }`
+- `/api/ping/redis` : `{ "redis": "ok" }`

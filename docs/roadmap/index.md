@@ -1,6 +1,7 @@
 # Roadmap
 
 - [x] 00 - Squelette du monorepo
+- [x] Full-Stack baseline
 - [ ] 01 - Authentification de developpement et RBAC minimal
 - [ ] 02 - Missions et affectations
 

@@ -1,4 +1,6 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-docker compose -f deploy/dev/compose.yaml down -v
+$root = Resolve-Path "$PSScriptRoot/.."
+Set-Location $root
+docker compose down -v
