@@ -9,16 +9,29 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+      - run: cp .env.example .env
       - run: docker compose up -d --build
       - name: Wait for proxy
         run: |
-          for i in {1..30}; do
-            if curl -f http://localhost:8080/api/health; then exit 0; fi
+          for i in {1..90}; do
+            if curl -fsS http://localhost:8080/ >/dev/null; then
+              echo "Proxy up"; exit 0
+            fi
             sleep 2
           done
-          exit 1
+          echo "Timeout"; exit 1
       - run: curl -f http://localhost:8080/
       - run: curl -f http://localhost:8080/api/health
       - run: curl -f http://localhost:8080/api/ping/db
       - run: curl -f http://localhost:8080/api/ping/redis
+      - name: Dump container states on failure
+        if: failure()
+        run: |
+          docker ps -a || true
+          docker logs orga_5-db-1 || true
+          docker logs orga_5-api-1 || true
+          docker logs orga_5-web-1 || true
+          docker logs orga_5-proxy-1 || true
       - run: docker compose down -v
+        if: always()
+
