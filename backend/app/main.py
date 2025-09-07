@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Depends
 from .auth import LoginRequest, Role, require_role
+from .planning import router as planning_router
 
 app = FastAPI()
 
@@ -14,3 +15,5 @@ def login(data: LoginRequest):
 @app.get("/admin", dependencies=[Depends(require_role(Role.admin))])
 def admin_area():
     return {"status": "admin"}
+
+app.include_router(planning_router, prefix="/v1/planning")
