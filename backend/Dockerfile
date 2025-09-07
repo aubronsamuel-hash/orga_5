@@ -12,6 +12,7 @@ COPY requirements.txt /app/requirements.txt
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
 COPY . /app
+RUN chmod +x /app/entrypoint.sh
 
 EXPOSE 8000
-CMD ["bash","-lc","python -m alembic -c /app/alembic.ini upgrade head && python -m uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+ENTRYPOINT ["/app/entrypoint.sh"]
