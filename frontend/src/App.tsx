@@ -1,6 +1,7 @@
 import { useState, FormEvent } from 'react'
 import { Button } from './components/ui/button'
 import { useAuth, Role } from './auth'
+import PlanningView from './planning'
 
 export default function App() {
   const { role, login, logout } = useAuth()
@@ -22,6 +23,15 @@ export default function App() {
         </select>
         <Button type="submit">Entrer</Button>
       </form>
+    )
+  }
+
+  if (window.location.pathname === '/planning') {
+    return (
+      <div className="p-4">
+        <PlanningView />
+        <Button onClick={logout}>Logout</Button>
+      </div>
     )
   }
 
