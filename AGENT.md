@@ -32,7 +32,7 @@ The agent MUST obey `.codex/prompt_rules.md`.
 See the File Tree in the project root. Step agents live under `agents/STEP_xx_name/AGENT.md`.
 
 ## BACKLOG
-- [ ] STEP 00: Scaffold MVP monorepo + CI + PS1 + compose dev.  (agents/STEP_00_scaffold/AGENT.md)
+- [x] STEP 00: Scaffold MVP monorepo + CI + PS1 + compose dev.  (agents/STEP_00_scaffold/AGENT.md)
 - [ ] STEP 01: Auth dev + RBAC minimal.                       (agents/STEP_01_auth_rbac/AGENT.md)
 - [ ] STEP 02: Missions + Assignments + conflits de base.     (agents/STEP_02_missions_assignments/AGENT.md)
 - [ ] STEP 03: Disponibilites + vue planning.                  (planned)
@@ -41,8 +41,7 @@ See the File Tree in the project root. Step agents live under `agents/STEP_xx_na
 - [ ] STEP 06: Observabilite basique.                          (planned)
 
 ## CURRENT TASK
-BASELINE ONLY. No build action yet. Set this to a step path when ready, e.g.:
-`CURRENT TASK: agents/STEP_00_scaffold/AGENT.md`
+CURRENT TASK: agents/STEP_01_auth_rbac/AGENT.md
 
 ## LINKS TO STEP AGENTS
 - agents/STEP_00_scaffold/AGENT.md
@@ -56,7 +55,7 @@ PR title: concise, Conventional Commits style.
 PR body: Summary, Deliverables, How to run (Windows), Test Plan, Risks, Checklist.
 
 ## CHANGELOG
-- (empty)
+- 2025-09-07: STEP 00 scaffold complete.
 
 ## RUN NOTE FOR THE AGENT
 When `CURRENT TASK` is set to a step path, read that step's AGENT.md and execute exactly as written. Do not deviate from invariant rules.
