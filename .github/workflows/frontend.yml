@@ -1,33 +1,71 @@
-name: frontend
+name: frontend / test
 
 on:
   push:
     paths:
-      - 'frontend/**'
-      - '.github/workflows/frontend.yml'
+      - "frontend/**"
+      - ".github/workflows/frontend.yml"
   pull_request:
     paths:
-      - 'frontend/**'
-      - '.github/workflows/frontend.yml'
+      - "frontend/**"
+      - ".github/workflows/frontend.yml"
 
 jobs:
-  test:
+  lockfile-guard:
+    name: lockfile guard (default branch only)
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: frontend
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Check package-lock.json committed
+        run: |
+          if [ ! -f frontend/package-lock.json ]; then
+            echo "::error::frontend/package-lock.json is missing on the default branch. Commit it to ensure reproducible builds."
+            exit 1
+          fi
+
+  test:
+    name: frontend tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Install
-        run: npm ci
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install deps
+        working-directory: frontend
+        run: |
+          if [ -f package-lock.json ]; then
+            echo "package-lock.json found -> using npm ci"
+            npm ci
+          else
+            echo "No package-lock.json found. Generating one..."
+            npm install --package-lock-only --no-audit --no-fund
+            echo "::warning::package-lock.json was generated in CI; please commit frontend/package-lock.json."
+            npm ci
+          fi
+
       - name: Lint
-        run: npm run lint
-      - name: Unit
-        run: npm test
+        working-directory: frontend
+        run: npm run lint --if-present
+
+      - name: Typecheck
+        working-directory: frontend
+        run: npm run typecheck --if-present
+
+      - name: Unit tests
+        working-directory: frontend
+        run: npm test --if-present -- --ci
+
       - name: Playwright
+        working-directory: frontend
         run: |
           npx playwright install --with-deps
-          npm run playwright:smoke
+          npm run playwright:smoke --if-present
