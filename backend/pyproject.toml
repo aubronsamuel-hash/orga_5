@@ -18,8 +18,12 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest",
-    "coverage",
+    "pytest-cov",
+    "httpx",
 ]
+
+[tool.setuptools]
+packages = ["app"]
 
 [tool.pytest.ini_options]
 addopts = "--cov=app --cov-report=term-missing"
