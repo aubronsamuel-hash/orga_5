@@ -1,42 +1,25 @@
-from fastapi import FastAPI
-import os
-import psycopg
-import redis.asyncio as redis
+from fastapi import FastAPI, Depends
+from sqlalchemy.orm import Session
+from .db import engine, Base
+from . import models, crud
+from .schemas import HealthOut, UserOut
+from .deps import db_dep
 
-app = FastAPI()
+app = FastAPI(title="Orga5 API")
 
-@app.get("/health")
-def health() -> dict[str, str]:
+# Create tables on startup (simple bootstrap; Alembic later)
+Base.metadata.create_all(bind=engine)
+
+@app.on_event("startup")
+def seed():
+    from .db import SessionLocal
+    with SessionLocal() as db:
+        crud.seed_minimal(db)
+
+@app.get("/health", response_model=HealthOut)
+def health():
     return {"status": "ok"}
 
-@app.get("/api/health")
-def api_health() -> dict[str, str]:
-    return {"api": "ok"}
-
-@app.get("/api/ping/db")
-def ping_db() -> dict[str, int]:
-    conn = psycopg.connect(
-        host=os.getenv("POSTGRES_HOST", "db"),
-        port=os.getenv("POSTGRES_PORT", "5432"),
-        user=os.getenv("POSTGRES_USER"),
-        password=os.getenv("POSTGRES_PASSWORD"),
-        dbname=os.getenv("POSTGRES_DB"),
-    )
-    with conn:
-        with conn.cursor() as cur:
-            cur.execute("SELECT 1")
-            row = cur.fetchone()
-    conn.close()
-    return {"db": row[0]}
-
-@app.get("/api/ping/redis")
-async def ping_redis() -> dict[str, str]:
-    client = redis.Redis(
-        host=os.getenv("REDIS_HOST", "redis"),
-        port=int(os.getenv("REDIS_PORT", "6379")),
-    )
-    try:
-        await client.ping()
-        return {"redis": "ok"}
-    finally:
-        await client.close()
+@app.get("/users", response_model=list[UserOut])
+def list_users(db: Session = Depends(db_dep)):
+    return db.query(models.User).all()
