@@ -1,14 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import Login from "./pages/Login";
+import Planning from "./pages/Planning";
 
 export default function App() {
-  const [status, setStatus] = useState("loading");
-
-  useEffect(() => {
-    fetch("/api/health")
-      .then((r) => r.json())
-      .then((d) => setStatus(d.api))
-      .catch(() => setStatus("error"));
-  }, []);
-
-  return <div>API health: {status}</div>;
+  const [authed, setAuthed] = useState(false);
+  return authed ? <Planning /> : <Login onSuccess={() => setAuthed(true)} />;
 }
