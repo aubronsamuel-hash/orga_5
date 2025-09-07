@@ -28,15 +28,13 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    command: >
-      bash -lc "python -m alembic -c /app/alembic.ini upgrade head && python -m uvicorn app.main:app --host 0.0.0.0 --port 8000"
     ports:
       - "8000:8000"
     healthcheck:
-      test: ["CMD", "curl", "-fsS", "http://localhost:8000/health"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      interval: 15s
+      timeout: 3s
+      retries: 5
 
   web:
     build:
