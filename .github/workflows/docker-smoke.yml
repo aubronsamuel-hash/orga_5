@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+      - name: Validate compose
+        run: docker compose config
       - run: cp .env.example .env
       - run: docker compose up -d --build
       - name: Wait for proxy
@@ -32,6 +34,6 @@ jobs:
           docker logs orga_5-api-1 || true
           docker logs orga_5-web-1 || true
           docker logs orga_5-proxy-1 || true
-      - run: docker compose down -v
+      - run: docker compose down -v || true
         if: always()
 
