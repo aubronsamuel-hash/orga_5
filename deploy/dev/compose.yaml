@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+  backend:
+    build:
+      context: ../../backend
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    volumes:
+      - ../../backend:/app
+    depends_on:
+      - db
+  frontend:
+    build:
+      context: ../../frontend
+    volumes:
+      - ../../frontend:/app
+    depends_on:
+      - backend
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+    depends_on:
+      - backend
+      - frontend
+volumes:
+  db-data:
