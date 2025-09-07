@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import App from './App'
-import { AuthProvider } from './auth'
+import { AuthProvider, type Role } from './auth'
 
-function setup(role: any = null) {
+function setup(role: Role | null = null) {
   return render(
     <AuthProvider initialRole={role}>
       <App />
