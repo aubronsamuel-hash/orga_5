@@ -1,14 +1,10 @@
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
-from .db import engine, Base
 from . import models, crud
-from .schemas import HealthOut, UserOut
+from .schemas import UserOut
 from .deps import db_dep
 
 app = FastAPI(title="Orga5 API")
-
-# Create tables on startup (simple bootstrap; Alembic later)
-Base.metadata.create_all(bind=engine)
 
 @app.on_event("startup")
 def seed():
@@ -16,7 +12,7 @@ def seed():
     with SessionLocal() as db:
         crud.seed_minimal(db)
 
-@app.get("/health", response_model=HealthOut)
+@app.get("/health")
 def health():
     return {"status": "ok"}
 
