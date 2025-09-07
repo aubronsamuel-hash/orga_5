@@ -1,16 +1,8 @@
-Set-StrictMode -Version Latest
-$ErrorActionPreference = 'Stop'
+$ErrorActionPreference = "Stop"
 
-$root = Resolve-Path "$PSScriptRoot/.."
-$envPath = Join-Path $root '.env'
-Get-Content $envPath | ForEach-Object {
-    if ($_ -match '^([^#=]+)=([^#]+)$') {
-        [Environment]::SetEnvironmentVariable($matches[1], $matches[2])
-    }
-}
+$health = Invoke-RestMethod -Uri "http://localhost:8000/health"
+if ($health.status -ne 'ok' -or $health.db -ne 'up') { throw 'health failed' }
 
-$base = "http://localhost:$([Environment]::GetEnvironmentVariable('WEB_PORT'))"
-Invoke-RestMethod "$base/" | Out-Null
-Invoke-RestMethod "$base/api/health" | Out-Null
-Invoke-RestMethod "$base/api/ping/db" | Out-Null
-Invoke-RestMethod "$base/api/ping/redis" | Out-Null
+$body = @{ email = 'admin@example.com'; password = 'ChangeMe123!' } | ConvertTo-Json
+$login = Invoke-RestMethod -Method Post -Uri "http://localhost:8000/auth/login" -ContentType 'application/json' -Body $body
+if (-not $login.access_token) { throw 'login failed' }
