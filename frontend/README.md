@@ -18,3 +18,9 @@ In CI:
 - If it is missing, CI generates one with `npm install --package-lock-only --no-audit --no-fund` and emits a warning, then proceeds. Please commit the lockfile locally to avoid the warning and to guarantee reproducibility.
 
 On the default branch, a lightweight guard may fail if `frontend/package-lock.json` is missing.
+
+## Authentification de developpement
+Un formulaire permet de choisir un role (`admin`, `planner`, `tech`). L'interface affiche certaines sections selon ce role.
+
+## Changelog
+- 2025-09-07 : ajout de l'authentification de developpement et des roles.

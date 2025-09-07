@@ -33,7 +33,7 @@ See the File Tree in the project root. Step agents live under `agents/STEP_xx_na
 
 ## BACKLOG
 - [x] STEP 00: Scaffold MVP monorepo + CI + PS1 + compose dev.  (agents/STEP_00_scaffold/AGENT.md)
-- [ ] STEP 01: Auth dev + RBAC minimal.                       (agents/STEP_01_auth_rbac/AGENT.md)
+- [x] STEP 01: Auth dev + RBAC minimal.                       (agents/STEP_01_auth_rbac/AGENT.md)
 - [ ] STEP 02: Missions + Assignments + conflits de base.     (agents/STEP_02_missions_assignments/AGENT.md)
 - [ ] STEP 03: Disponibilites + vue planning.                  (planned)
 - [ ] STEP 04: Comptabilite v1 (totaux mensuels + CSV).        (planned)
@@ -41,7 +41,7 @@ See the File Tree in the project root. Step agents live under `agents/STEP_xx_na
 - [ ] STEP 06: Observabilite basique.                          (planned)
 
 ## CURRENT TASK
-CURRENT TASK: agents/STEP_01_auth_rbac/AGENT.md
+CURRENT TASK: agents/STEP_02_missions_assignments/AGENT.md
 
 ## LINKS TO STEP AGENTS
 - agents/STEP_00_scaffold/AGENT.md
@@ -57,6 +57,7 @@ PR body: Summary, Deliverables, How to run (Windows), Test Plan, Risks, Checklis
 ## CHANGELOG
 - 2025-09-07: STEP 00 scaffold complete.
 - 2025-09-07: STEP 00 verification and tooling adjustments.
+- 2025-09-07: STEP 01 auth dev and minimal RBAC.
 
 ## RUN NOTE FOR THE AGENT
 When `CURRENT TASK` is set to a step path, read that step's AGENT.md and execute exactly as written. Do not deviate from invariant rules.
