@@ -38,11 +38,13 @@ services:
         condition: service_healthy
     ports:
       - "${API_PORT}:8000"
+    command: ["python","-m","uvicorn","app.main:app","--host","0.0.0.0","--port","8000"]
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:${API_PORT}/health"]
-      interval: 5s
+      test: ["CMD", "python", "-c", "import urllib.request,sys; urllib.request.urlopen('http://127.0.0.1:8000/docs'); sys.exit(0)"]
+      interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
+      start_period: 10s
   web:
     build: ./frontend
     environment:
