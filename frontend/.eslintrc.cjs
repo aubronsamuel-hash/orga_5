@@ -1,7 +1,10 @@
 module.exports = {
-  env: { browser: true, es2021: true },
-  extends: ['eslint:recommended', 'plugin:react-hooks/recommended'],
-  parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
-  plugins: ['react-refresh'],
-  rules: {},
+  root: true,
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint', 'react-hooks'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react-hooks/recommended'
+  ],
 }

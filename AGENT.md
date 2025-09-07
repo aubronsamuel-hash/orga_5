@@ -56,6 +56,7 @@ PR body: Summary, Deliverables, How to run (Windows), Test Plan, Risks, Checklis
 
 ## CHANGELOG
 - 2025-09-07: STEP 00 scaffold complete.
+- 2025-09-07: STEP 00 verification and tooling adjustments.
 
 ## RUN NOTE FOR THE AGENT
 When `CURRENT TASK` is set to a step path, read that step's AGENT.md and execute exactly as written. Do not deviate from invariant rules.
