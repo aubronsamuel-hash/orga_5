@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-test('home page', async ({ page }) => {
+test('login form visible', async ({ page }) => {
   await page.goto('/')
-  await expect(page.getByText('Hello')).toBeVisible()
+  await expect(page.getByText('Login')).toBeVisible()
 })

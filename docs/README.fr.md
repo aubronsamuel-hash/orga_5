@@ -7,3 +7,9 @@
 5. Ouvrir http://localhost:8080 et vérifier `/api/healthz`.
 6. Lancer `./PS1/smoke.ps1` pour les tests rapides.
 7. Pour arrêter: `./PS1/dev_down.ps1`.
+
+## Authentification de developpement
+
+- Endpoint POST `/auth/login`.
+- Roles : `admin`, `planner`, `tech`.
+- Le jeton renvoyé est le rôle lui-meme et doit etre transmis via `Authorization: Bearer`.
